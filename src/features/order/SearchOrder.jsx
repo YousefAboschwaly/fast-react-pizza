@@ -14,7 +14,7 @@ function handleSubmit(e){
     
   return (
     <form onSubmit={handleSubmit}>
-      <input value={query} onChange={(e)=>setQuery(e.target.value)} />
+      <input value={query} onChange={(e)=>setQuery(e.target.value)} placeholder="enter order Id" />
     </form>
   )
 }

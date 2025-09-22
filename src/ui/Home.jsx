@@ -1,10 +1,12 @@
 function Home() {
   return (
     <div>
-      <h1 className="m-5 p-5 text-center text-3xl font-semibold text-yellow-500">
+      <h1 className="text-center text-3xl font-semibold">
         The best pizza.
         <br />
-        Straight out of the oven, straight to you.
+        <span className="text-yellow-500">
+          Straight out of the oven, straight to you.
+        </span>
       </h1>
     </div>
   );
