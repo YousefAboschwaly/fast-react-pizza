@@ -5,7 +5,7 @@ import { createOrder } from "../../services/apiRestaurant";
 // https://uibakery.io/regex-library/phone-number
 const isValidPhone = (str) =>
   /^\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/.test(
-    str
+    str,
   );
 
 const fakeCart = [
@@ -35,6 +35,7 @@ const fakeCart = [
 function CreateOrder() {
   const navigation = useNavigation();
   const isSubmitting = navigation.state === "submitting";
+  console.log(isSubmitting);
   const formErrors = useActionData();
 
   const cart = fakeCart;
@@ -54,7 +55,7 @@ function CreateOrder() {
           <div>
             <input type="tel" name="phone" required />
           </div>
-         {formErrors?.phone && <p>{ formErrors.phone}</p>}
+          {formErrors?.phone && <p>{formErrors.phone}</p>}
         </div>
 
         <div>
@@ -77,7 +78,10 @@ function CreateOrder() {
         <input type="hidden" name="cart" value={JSON.stringify(cart)} />
 
         <div>
-          <button disabled={isSubmitting}>
+          <button
+            disabled={isSubmitting}
+            className="inline-block rounded-full bg-yellow-400 px-4 py-3 font-semibold tracking-wide text-stone-800 uppercase hover:bg-yellow-300 transition-colors duration-300 focus:bg-yellow-300 focus:ring focus:ring-yellow-300 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed hover:cursor-pointer"
+          >
             {isSubmitting ? "Placing Order..." : "Order now"}
           </button>
         </div>
