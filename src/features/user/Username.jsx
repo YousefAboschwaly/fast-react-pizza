@@ -1,3 +1,3 @@
 export default function Username() {
-  return <div className="text-sm font-semibold">Yousef</div>;
+  return <div className="text-sm font-semibold hidden md:block">Yousef</div>;
 }
