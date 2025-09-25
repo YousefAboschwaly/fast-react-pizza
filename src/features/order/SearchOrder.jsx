@@ -16,8 +16,8 @@ export default function Search() {
       <input
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        placeholder="enter order Id"
-        className="bg-white "
+        placeholder="Search order #"
+        className="bg-yellow-100 rounded-full w-28 focus:w-36 sm:w-64 px-4 py-2  text-sm placeholder-stone-400 sm:focus:w-72 transition-all duration-300 focus:outline-none focus:ring focus:ring-yellow-500 focus:ring-opacity-50"
       />
     </form>
   );
