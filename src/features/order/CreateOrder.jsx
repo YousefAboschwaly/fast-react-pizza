@@ -42,42 +42,42 @@ function CreateOrder() {
   const cart = fakeCart;
 
   return (
-    <div>
-      <h2>Ready to order? Let's go!</h2>
+    <div className="px-4 py-6">
+      <h2 className="text-xl font-semibold mb-8">Ready to order? Let's go!</h2>
 
       <Form method="POST">
-        <div>
-          <label>First Name</label>
-          <div>
+        <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center ">
+          <label  className="sm:basis-40">First Name</label>
+          <div className="flex-1">
             <input type="text" name="customer" required className="input" />
           </div>
         </div>
 
-        <div>
-          <label>Phone number</label>
-          <div>
+        <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center ">
+          <label className="sm:basis-40">Phone number</label>
+          <div  className="flex-1">
             <input type="tel" name="phone" required className="input" />
+          {formErrors?.phone && <p className="text-xs bg-red-100 text-red-700 mt-2 p-2 rounded-md">{formErrors.phone}</p>}
           </div>
-          {formErrors?.phone && <p>{formErrors.phone}</p>}
         </div>
 
-        <div>
-          <label>Address</label>
-          <div>
+        <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center ">
+          <label className="sm:basis-40">Address</label>
+          <div  className="flex-1">
             <input type="text" name="address" required className="input" />
           </div>
         </div>
 
-        <div>
+        <div className="mb-12 flex items-center gap-3">
           <input
-            className="h-6 w-6 accent-yellow-400 focus:ring focus:ring-yellow-400 focus:ring-offset-2 focus:outline-none"
+            className="h-6 w-6 accent-yellow-400 focus:ring focus:ring-yellow-400 focus:ring-offset-2 focus:outline-none hover:cursor-pointer"
             type="checkbox"
             name="priority"
             id="priority"
             // value={withPriority}
             // onChange={(e) => setWithPriority(e.target.checked)}
           />
-          <label htmlFor="priority">Want to yo give your order priority?</label>
+          <label className="font-medium" htmlFor="priority">Want to yo give your order priority?</label>
         </div>
         <input type="hidden" name="cart" value={JSON.stringify(cart)} />
 
@@ -103,7 +103,7 @@ export async function action({ request }) {
   const errors = {};
   if (!isValidPhone(order.phone)) {
     errors.phone =
-      "please give us your correct phone number so we can contact you if necessary";
+      "please give us your correct phone number  we might need it to connect you";
   }
   if (Object.keys(errors).length > 0) return errors;
 
