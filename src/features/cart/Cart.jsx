@@ -39,7 +39,7 @@ function Cart() {
       </ButtonLink>
 
       <h2 className="mt-7 text-xl font-semibold">Your cart, %NAME%</h2>
-      <ul className="mt-3 divide-y divide-stone-200 border-b">
+      <ul className="mt-3 divide-y divide-stone-200 border-b  border-stone-200">
         {cart.map((item) => (
           <CartItem item={item} key={item.key} />
         ))}
