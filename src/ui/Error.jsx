@@ -6,7 +6,7 @@ function Error() {
   console.log(error);
 
   return (
-    <div>
+    <div className="px-4 py-3">
       <h1>Something went wrong 😢</h1>
       <ButtonLink to={-1}>&larr; Go back</ButtonLink>
     </div>
