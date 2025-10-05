@@ -21,7 +21,7 @@ export const fetchAddress = createAsyncThunk("user/fetchAddress", async function
 
   // 3) Then we return an object with the data that we are interested in
   // payLoad of FULFILLED action
-  
+
   return { position, address };
 });
 
@@ -59,4 +59,4 @@ const userSlice = createSlice({
 
 export const { updateName  } = userSlice.actions;
 export default userSlice.reducer;
-export const getUserName = (state) => state.user.userName;
+export const getUser = (state) => state.user;

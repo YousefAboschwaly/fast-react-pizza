@@ -3,12 +3,12 @@ import { Form, redirect, useActionData, useNavigation } from "react-router-dom";
 import { createOrder } from "../../services/apiRestaurant";
 import Button from "../../ui/Button";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchAddress, getUserName } from "../user/userSlice";
+import { fetchAddress, getUser } from "../user/userSlice";
 import { clearCart, getCart, getTotalCartPrice } from "../cart/cartSlice";
-import store from './../../Store';
+import store from "./../../Store";
 import { useState } from "react";
-import { formatCurrency } from './../../utils/helpers';
-import EmptyCart from './../cart/EmptyCart';
+import { formatCurrency } from "./../../utils/helpers";
+import EmptyCart from "./../cart/EmptyCart";
 
 // https://uibakery.io/regex-library/phone-number
 const isValidPhone = (str) =>
@@ -16,28 +16,24 @@ const isValidPhone = (str) =>
     str,
   );
 
-
-
 function CreateOrder() {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const [withPriority, setWithPriority] = useState(false);
-  const userName = useSelector(getUserName);
-
+  const {userName, status, address, position } = useSelector(getUser);
+  const isLoadingStatus = status === "loading"
   const navigation = useNavigation();
   const isSubmitting = navigation.state === "submitting";
-  console.log(isSubmitting);
   const formErrors = useActionData();
 
   const cart = useSelector(getCart);
-  const totalCartPrice = useSelector(getTotalCartPrice)
-  const priorityPrice = withPriority ? totalCartPrice *0.2 : 0
-  const totalPrice = totalCartPrice + priorityPrice
+  const totalCartPrice = useSelector(getTotalCartPrice);
+  const priorityPrice = withPriority ? totalCartPrice * 0.2 : 0;
+  const totalPrice = totalCartPrice + priorityPrice;
 
-  if (cart.length === 0) return<EmptyCart/>
+  if (cart.length === 0) return <EmptyCart />;
   return (
     <div className="px-4 py-6">
       <h2 className="mb-8 text-xl font-semibold">Ready to order? Let's go!</h2>
-      <button className="bg-yellow-400 px-4 py-2" onClick={()=>dispatch(fetchAddress())}>Get Position</button>
 
       <Form method="POST">
         <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center">
@@ -65,11 +61,20 @@ function CreateOrder() {
           </div>
         </div>
 
-        <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center">
+        <div className=" relative mb-5 flex flex-col gap-2 sm:flex-row sm:items-center">
           <label className="sm:basis-40">Address</label>
           <div className="flex-1">
-            <input type="text" name="address" required className="input" />
+            <input type="text" name="address" required className="input" defaultValue={address} />
           </div>
+        {!address&& <span className=" absolute right-[3px]  ">
+
+          <Button disabled={isLoadingStatus} type={"small"} onClick={(e) =>{
+            e.preventDefault()
+            dispatch(fetchAddress())
+          } }>
+            Get Position
+          </Button>
+         </span>}
         </div>
 
         <div className="mb-12 flex items-center gap-3">
@@ -88,8 +93,10 @@ function CreateOrder() {
         <input type="hidden" name="cart" value={JSON.stringify(cart)} />
 
         <div>
-          <Button disabled={isSubmitting} type={"primary"}>
-            {isSubmitting ? "Placing Order..." : `Order now from ${formatCurrency(totalPrice)}`}
+          <Button disabled={isSubmitting || isLoadingStatus} type={"primary"}>
+            {isSubmitting
+              ? "Placing Order..."
+              : `Order now from ${formatCurrency(totalPrice)}`}
           </Button>
         </div>
       </Form>
@@ -118,7 +125,7 @@ export async function action({ request }) {
   // because react-router has its own way of managing state
   // and using store in these files can lead to conflicts and unexpected behavior.
   // Instead, use loader and action functions to interact with the store indirectly.
-  store.dispatch(clearCart())
+  store.dispatch(clearCart());
   return redirect(`/order/${newOrder.id}`);
 }
 

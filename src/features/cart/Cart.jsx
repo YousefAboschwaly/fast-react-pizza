@@ -3,14 +3,13 @@ import Button from "../../ui/Button";
 import CartItem from "./CartItem";
 import { useDispatch, useSelector } from "react-redux";
 import { clearCart, getCart } from "./cartSlice";
-import { getUserName } from "../user/userSlice";
+import { getUser } from "../user/userSlice";
 import EmptyCart from './EmptyCart';
 
 
 function Cart() {
   const dispatch = useDispatch()
-  const userName = useSelector(getUserName)
-
+  const {userName} = useSelector(getUser)
   const cart = useSelector(getCart);
 
 if(cart.length ===0) return<EmptyCart/>
