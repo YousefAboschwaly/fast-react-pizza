@@ -4,6 +4,8 @@ import { createOrder } from "../../services/apiRestaurant";
 import Button from "../../ui/Button";
 import { useSelector } from "react-redux";
 import { getUserName } from "../user/userSlice";
+import { clearCart, getCart } from "../cart/cartSlice";
+import store from './../../Store';
 
 // https://uibakery.io/regex-library/phone-number
 const isValidPhone = (str) =>
@@ -11,29 +13,7 @@ const isValidPhone = (str) =>
     str,
   );
 
-const fakeCart = [
-  {
-    pizzaId: 12,
-    name: "Mediterranean",
-    quantity: 2,
-    unitPrice: 16,
-    totalPrice: 32,
-  },
-  {
-    pizzaId: 6,
-    name: "Vegetate",
-    quantity: 1,
-    unitPrice: 13,
-    totalPrice: 13,
-  },
-  {
-    pizzaId: 11,
-    name: "Spinach and Mushroom",
-    quantity: 1,
-    unitPrice: 15,
-    totalPrice: 15,
-  },
-];
+
 
 function CreateOrder() {
   const userName = useSelector(getUserName);
@@ -43,7 +23,7 @@ function CreateOrder() {
   console.log(isSubmitting);
   const formErrors = useActionData();
 
-  const cart = fakeCart;
+  const cart = useSelector(getCart);
 
   return (
     <div className="px-4 py-6">
@@ -124,7 +104,11 @@ export async function action({ request }) {
   if (Object.keys(errors).length > 0) return errors;
 
   const newOrder = await createOrder(order);
-  console.log(newOrder);
+  // Don't over Use store in components or files related to react-router
+  // because react-router has its own way of managing state
+  // and using store in these files can lead to conflicts and unexpected behavior.
+  // Instead, use loader and action functions to interact with the store indirectly.
+  store.dispatch(clearCart())
   return redirect(`/order/${newOrder.id}`);
 }
 
