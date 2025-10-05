@@ -4,8 +4,10 @@ import { createOrder } from "../../services/apiRestaurant";
 import Button from "../../ui/Button";
 import { useSelector } from "react-redux";
 import { getUserName } from "../user/userSlice";
-import { clearCart, getCart } from "../cart/cartSlice";
+import { clearCart, getCart, getTotalCartPrice } from "../cart/cartSlice";
 import store from './../../Store';
+import { useState } from "react";
+import { formatCurrency } from './../../utils/helpers';
 
 // https://uibakery.io/regex-library/phone-number
 const isValidPhone = (str) =>
@@ -16,6 +18,7 @@ const isValidPhone = (str) =>
 
 
 function CreateOrder() {
+  const [withPriority, setWithPriority] = useState(false);
   const userName = useSelector(getUserName);
 
   const navigation = useNavigation();
@@ -24,6 +27,9 @@ function CreateOrder() {
   const formErrors = useActionData();
 
   const cart = useSelector(getCart);
+  const totalCartPrice = useSelector(getTotalCartPrice)
+  const priorityPrice = withPriority ? totalCartPrice *0.2 : 0
+  const totalPrice = totalCartPrice + priorityPrice
 
   return (
     <div className="px-4 py-6">
@@ -68,8 +74,8 @@ function CreateOrder() {
             type="checkbox"
             name="priority"
             id="priority"
-            // value={withPriority}
-            // onChange={(e) => setWithPriority(e.target.checked)}
+            value={withPriority}
+            onChange={(e) => setWithPriority(e.target.checked)}
           />
           <label className="font-medium" htmlFor="priority">
             Want to yo give your order priority?
@@ -79,7 +85,7 @@ function CreateOrder() {
 
         <div>
           <Button disabled={isSubmitting} type={"primary"}>
-            {isSubmitting ? "Placing Order..." : "Order now"}
+            {isSubmitting ? "Placing Order..." : `Order now from ${formatCurrency(totalPrice)}`}
           </Button>
         </div>
       </Form>
@@ -93,7 +99,7 @@ export async function action({ request }) {
   const order = {
     ...data,
     cart: JSON.parse(data.cart),
-    priority: data.priority === "on",
+    priority: data.priority === "true",
   };
   console.log(order);
   const errors = {};
