@@ -8,6 +8,7 @@ import { clearCart, getCart, getTotalCartPrice } from "../cart/cartSlice";
 import store from './../../Store';
 import { useState } from "react";
 import { formatCurrency } from './../../utils/helpers';
+import EmptyCart from './../cart/EmptyCart';
 
 // https://uibakery.io/regex-library/phone-number
 const isValidPhone = (str) =>
@@ -31,6 +32,7 @@ function CreateOrder() {
   const priorityPrice = withPriority ? totalCartPrice *0.2 : 0
   const totalPrice = totalCartPrice + priorityPrice
 
+  if (cart.length === 0) return<EmptyCart/>
   return (
     <div className="px-4 py-6">
       <h2 className="mb-8 text-xl font-semibold">Ready to order? Let's go!</h2>
