@@ -19,8 +19,14 @@ const isValidPhone = (str) =>
 function CreateOrder() {
   const dispatch = useDispatch();
   const [withPriority, setWithPriority] = useState(false);
-  const {userName, status, address, position } = useSelector(getUser);
-  const isLoadingStatus = status === "loading"
+  const {
+    userName,
+    status: addressStatus,
+    address,
+    position,
+    error: addressError,
+  } = useSelector(getUser);
+  const isLoadingStatus = addressStatus === "loading";
   const navigation = useNavigation();
   const isSubmitting = navigation.state === "submitting";
   const formErrors = useActionData();
@@ -61,20 +67,39 @@ function CreateOrder() {
           </div>
         </div>
 
-        <div className=" relative mb-5 flex flex-col gap-2 sm:flex-row sm:items-center">
+        <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center">
           <label className="sm:basis-40">Address</label>
           <div className="flex-1">
-            <input type="text" name="address" required className="input" defaultValue={address} />
-          </div>
-        {!address&& <span className=" absolute right-[3px]  ">
+            <div className="relative">
+              <input
+                type="text"
+                name="address"
+                required
+                className="input"
+                defaultValue={address}
+              />
 
-          <Button disabled={isLoadingStatus} type={"small"} onClick={(e) =>{
-            e.preventDefault()
-            dispatch(fetchAddress())
-          } }>
-            Get Position
-          </Button>
-         </span>}
+              {!address && (
+                <span className="absolute top-1/2 right-[3px] -translate-y-1/2 sm:right-[5px]">
+                  <Button
+                    disabled={isLoadingStatus}
+                    type={"small"}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      dispatch(fetchAddress());
+                    }}
+                  >
+                    Get Position
+                  </Button>
+                </span>
+              )}
+            </div>
+            {addressError && !address &&(
+              <p className="mt-2 rounded-md bg-red-100 p-2 text-xs text-red-700">
+                {addressError}
+              </p>
+            )}
+          </div>
         </div>
 
         <div className="mb-12 flex items-center gap-3">
@@ -91,6 +116,15 @@ function CreateOrder() {
           </label>
         </div>
         <input type="hidden" name="cart" value={JSON.stringify(cart)} />
+        <input
+          type="hidden"
+          name="position"
+          value={
+            position.latitude && position.longitude
+              ? `${position.latitude},${position.longitude}`
+              : ""
+          }
+        />
 
         <div>
           <Button disabled={isSubmitting || isLoadingStatus} type={"primary"}>
@@ -119,6 +153,7 @@ export async function action({ request }) {
       "please give us your correct phone number  we might need it to connect you";
   }
   if (Object.keys(errors).length > 0) return errors;
+  
 
   const newOrder = await createOrder(order);
   // Don't over Use store in components or files related to react-router
