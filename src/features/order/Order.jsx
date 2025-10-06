@@ -10,6 +10,7 @@ import {
 } from "../../utils/helpers";
 import OrderItem from './OrderItem';
 import { useEffect } from "react";
+import UpdateOrder from "./UpdateOrder";
 
 function Order() {
   // Everyone can search for all orders, so for privacy reasons we're gonna gonna exclude names or address, these are only for the restaurant staff
@@ -70,6 +71,7 @@ console.log(fetcher.data)
         {priority && <p  className="text-sm font-medium text-stone-600">Price priority: {formatCurrency(priorityPrice)}</p>}
         <p className="font-bold">To pay on delivery: {formatCurrency(orderPrice + priorityPrice)}</p>
       </div>
+     {!priority && <UpdateOrder order={order}/>}
     </div>
   );
 }
